@@ -208,7 +208,7 @@ class FilterScript(object):
         script_file_descriptor.close()
 
     def run_script(self, log=None, ml_log=None, mlp_out=None, overwrite=False,
-                   file_out=None, output_mask=None, script_file=None, print_meshlabserver_output=True):
+                   file_out=None, output_mask=None, script_file=None, print_meshlabserver_output=True, timeout=None):
         """ Run the script
         """
 
@@ -247,7 +247,7 @@ class FilterScript(object):
         run(script=script_file, log=log, ml_log=ml_log,
             mlp_in=self.mlp_in, mlp_out=mlp_out, overwrite=overwrite,
             file_in=self.file_in, file_out=file_out, output_mask=output_mask, ml_version=self.ml_version,
-            print_meshlabserver_output=print_meshlabserver_output)
+            print_meshlabserver_output=print_meshlabserver_output, timeout=timeout)
 
         # Parse output
         # TODO: record which layer this is associated with?
@@ -319,7 +319,7 @@ def handle_error(program_name, cmd, log=None):
 def run(script='TEMP3D_default.mlx', log=None, ml_log=None,
         mlp_in=None, mlp_out=None, overwrite=False, file_in=None,
         file_out=None, output_mask=None, cmd=None, ml_version=ML_VERSION,
-        print_meshlabserver_output=True):
+        print_meshlabserver_output=True, timeout=None):
     """Run meshlabserver in a subprocess.
 
     Args:
@@ -440,7 +440,7 @@ def run(script='TEMP3D_default.mlx', log=None, ml_log=None,
         # TODO: test if shell=True is really needed
         return_code = subprocess.call(cmd, shell=True,
                                       stdout=log_file, stderr=log_file,
-                                      universal_newlines=True)
+                                      universal_newlines=True, timeout=timeout)
         if log is not None:
             log_file.close()
         if (return_code == 0) or handle_error(program_name='MeshLab', cmd=cmd, log=log):
